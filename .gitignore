@@ -2,18 +2,11 @@
 /target/
 Cargo.lock
 
-# Tree-sitter
-grammars/noir/node_modules/
-grammars/noir/build/
-grammars/noir/bindings/
-grammars/noir/src/
-grammars/noir/*.wasm
-grammars/noir/package-lock.json
-grammars/noir/tree-sitter.json
+# Tree-sitter (grammar is external: github.com/Hydepwns/tree-sitter-noir)
+grammars/
 
 # Extension build artifacts
 extension.wasm
-grammars/*.wasm
 
 # Editor
 .vscode/
