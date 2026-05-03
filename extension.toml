@@ -1,6 +1,6 @@
 id = "zoir"
 name = "Zoir"
-description = "Noir zero-knowledge language support for Zed"
+description = "Noir language support for Zed, focused on Aztec network development"
 version = "0.1.3"
 schema_version = 1
 authors = ["DROO <drew@axol.io>"]

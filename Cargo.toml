@@ -3,7 +3,7 @@ name = "zoir"
 version = "0.1.1"
 edition = "2021"
 license = "MIT OR Apache-2.0"
-description = "Noir zero-knowledge language support for Zed"
+description = "Noir language support for Zed, focused on Aztec network development"
 repository = "https://github.com/Hydepwns/zoir"
 
 [lib]
