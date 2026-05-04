@@ -49,6 +49,8 @@
 (if_expression
   consequence: (block) @conditional.inside)
 
+(match_expression) @conditional.around
+
 ; Loop text objects
 (for_statement) @loop.around
 
@@ -69,6 +71,3 @@
 (call_expression) @call.around
 
 (method_call_expression) @call.around
-
-; Match arm text objects
-(match_arm) @parameter.around
