@@ -54,7 +54,7 @@ Highlights/locals/injections queries live in the upstream grammar repo under `qu
 
 ### Versioning
 
-`extension.toml` is the published version (Zed reads this). `Cargo.toml` should match. Keep them in sync on every release; CI does not currently enforce this.
+`extension.toml` is the published version (Zed reads this). `Cargo.toml` must match. CI enforces this in `.github/workflows/ci.yml`.
 
 ## Working on the Grammar
 

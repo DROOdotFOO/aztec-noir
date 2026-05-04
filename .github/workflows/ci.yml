@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('Cargo.toml', 'rust-toolchain.toml') }}
+
+      - name: Show toolchain
+        run: rustc --version && cargo --version
+
+      - name: Format
+        run: cargo fmt --check
+
+      - name: Clippy
+        run: cargo clippy --target wasm32-wasip1 --all-targets -- -D warnings
+
+      - name: Build
+        run: cargo build --release --target wasm32-wasip1
+
+      - name: Verify version sync
+        run: |
+          ext_version=$(awk -F'"' '/^version = / { print $2; exit }' extension.toml)
+          cargo_version=$(awk -F'"' '/^version = / { print $2; exit }' Cargo.toml)
+          if [ "$ext_version" != "$cargo_version" ]; then
+            echo "Version mismatch: extension.toml=$ext_version Cargo.toml=$cargo_version" >&2
+            exit 1
+          fi
+          echo "Versions match: $ext_version"
