@@ -10,10 +10,10 @@ Zoir is a Zed editor extension providing Noir language support, focused on Aztec
 
 This repository contains only the Zed extension. Two related concerns live elsewhere:
 
-- **Tree-sitter grammar** -- `Hydepwns/tree-sitter-noir` (referenced by SHA in `extension.toml`). The `grammars/` directory is `.gitignore`d locally.
+- **Tree-sitter grammar** -- `DROOdotFOO/tree-sitter-noir` (referenced by SHA in `extension.toml`). The `grammars/` directory is `.gitignore`d locally.
 - **`nargo` language server** -- `noir-lang/noir` (downloaded at runtime when not on PATH).
 
-If you need to edit the grammar (test corpus, conflicts, node names), do that work in `Hydepwns/tree-sitter-noir` and bump the `rev` in `extension.toml`. See [Working on the Grammar](#working-on-the-grammar) below.
+If you need to edit the grammar (test corpus, conflicts, node names), do that work in `DROOdotFOO/tree-sitter-noir` and bump the `rev` in `extension.toml`. See [Working on the Grammar](#working-on-the-grammar) below.
 
 ## Key Commands (this repo)
 
@@ -60,7 +60,7 @@ Highlights/locals/injections queries live in the upstream grammar repo under `qu
 
 The grammar is a separate project. To change it:
 
-1. Clone `Hydepwns/tree-sitter-noir` outside this repo
+1. Clone `DROOdotFOO/tree-sitter-noir` outside this repo
 2. Edit `grammar.js`, regenerate (`npx tree-sitter generate`), test (`npm test`)
 3. Tag a release in that repo
 4. Update the `rev` in this repo's `extension.toml`
@@ -91,7 +91,7 @@ Zed does not yet support `folds.scm` (see [Issue #22703](https://github.com/zed-
 - Aztec network: https://aztec.network
 - Noir language docs: https://noir-lang.org/docs/
 - Noir compiler: https://github.com/noir-lang/noir
-- Upstream grammar: https://github.com/Hydepwns/tree-sitter-noir
+- Upstream grammar: https://github.com/DROOdotFOO/tree-sitter-noir
 - Zed extension API: https://github.com/zed-industries/zed/tree/main/crates/zed_extension_api
 - Tree-sitter docs: https://tree-sitter.github.io/tree-sitter/
 

@@ -38,7 +38,7 @@ If you only need generic Noir editing without the Aztec slant, the [existing Noi
 Clone this repository into your Zed extensions directory:
 
 ```bash
-git clone https://github.com/Hydepwns/zoir ~/.config/zed/extensions/zoir
+git clone https://github.com/DROOdotFOO/zoir ~/.config/zed/extensions/zoir
 ```
 
 ## Requirements
@@ -130,7 +130,7 @@ fn test_main() {
 
 ## Tree-sitter Grammar
 
-Syntax highlighting is powered by [tree-sitter-noir](https://github.com/Hydepwns/tree-sitter-noir).
+Syntax highlighting is powered by [tree-sitter-noir](https://github.com/DROOdotFOO/tree-sitter-noir).
 
 ## Development
 
