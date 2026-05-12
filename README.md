@@ -6,7 +6,7 @@ Noir language support for [Zed](https://zed.dev), focused on [Aztec network](htt
 
 ## Aztec Focus
 
-Zoir exists to give Aztec contract authors a first-class editor experience in Zed. Noir is the DSL Aztec uses for its private-by-default L2, and Zoir is scoped accordingly:
+Aztec Noir gives Aztec contract authors a first-class editor experience in Zed. Noir is the DSL Aztec uses for its private-by-default L2, and this extension is scoped accordingly:
 
 - Tracks Noir versions used by current Aztec releases
 - Prioritizes editor support for the Aztec contract surface (notes, oracles, public/private functions)
