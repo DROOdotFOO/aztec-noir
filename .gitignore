@@ -1,8 +1,7 @@
 # Rust
 /target/
-Cargo.lock
 
-# Tree-sitter (grammar is external: github.com/Hydepwns/tree-sitter-noir)
+# Tree-sitter (grammar is external: github.com/DROOdotFOO/tree-sitter-noir)
 grammars/
 
 # Extension build artifacts
