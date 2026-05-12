@@ -3,6 +3,23 @@ use zed_extension_api::{
     self as zed, serde_json, settings::LspSettings, Command, LanguageServerId, Result, Worktree,
 };
 
+/// Returns the user-configured nargo path if set, otherwise calls the discovery fallback.
+///
+/// The user path is returned as-is: we do NOT stat it. Zed extensions run inside a WASI
+/// sandbox with preopened directories, so `fs::metadata` on an arbitrary absolute path
+/// (e.g. `/opt/noir/bin/nargo`) returns `Err` even when the file exists -- previously
+/// that broke every valid `lsp.nargo.binary.path` setting. Let Zed surface its own
+/// error if the path can't be launched.
+fn resolve_binary_path<F: FnOnce() -> Result<String>>(
+    user_path: Option<&str>,
+    fallback: F,
+) -> Result<String> {
+    if let Some(path) = user_path {
+        return Ok(path.to_string());
+    }
+    fallback()
+}
+
 struct ZoirExtension {
     cached_binary_path: Option<String>,
 }
@@ -126,16 +143,9 @@ impl zed::Extension for ZoirExtension {
         let settings = LspSettings::for_worktree("nargo", worktree).ok();
         let binary = settings.as_ref().and_then(|s| s.binary.as_ref());
 
-        let binary_path = if let Some(path) = binary.and_then(|b| b.path.as_ref()) {
-            if fs::metadata(path).is_err() {
-                return Err(format!(
-                    "nargo binary not found at {path} (configured via lsp.nargo.binary.path)"
-                ));
-            }
-            path.clone()
-        } else {
-            self.language_server_binary_path(language_server_id, worktree)?
-        };
+        let binary_path = resolve_binary_path(binary.and_then(|b| b.path.as_deref()), || {
+            self.language_server_binary_path(language_server_id, worktree)
+        })?;
 
         let mut args = vec!["lsp".to_string()];
         if let Some(extra_args) = binary.and_then(|b| b.arguments.as_ref()) {
@@ -178,3 +188,36 @@ impl zed::Extension for ZoirExtension {
 }
 
 zed::register_extension!(ZoirExtension);
+
+#[cfg(test)]
+mod tests {
+    use super::resolve_binary_path;
+
+    #[test]
+    fn user_path_takes_precedence_over_fallback() {
+        let result = resolve_binary_path(Some("/opt/noir/bin/nargo"), || {
+            panic!("fallback must not run when user_path is set")
+        });
+        assert_eq!(result.as_deref(), Ok("/opt/noir/bin/nargo"));
+    }
+
+    #[test]
+    fn no_user_path_uses_fallback() {
+        let result = resolve_binary_path(None, || Ok("/fallback/nargo".to_string()));
+        assert_eq!(result.as_deref(), Ok("/fallback/nargo"));
+    }
+
+    /// Regression: previously we did `fs::metadata(path).is_err()` on the user-supplied
+    /// path. Inside Zed's WASI sandbox, that always fails for paths outside the
+    /// preopened working directory -- which is exactly what users configure (e.g.
+    /// `/opt/noir/bin/nargo`). The fix is to pass the path through untouched and let
+    /// Zed produce its own launch error. This test pins that contract.
+    #[test]
+    fn user_path_is_not_stat_checked() {
+        let nonexistent = "/definitely/does/not/exist/on/any/system/nargo";
+        let result = resolve_binary_path(Some(nonexistent), || {
+            panic!("fallback must not run when user_path is set")
+        });
+        assert_eq!(result.as_deref(), Ok(nonexistent));
+    }
+}
