@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Zoir is a Zed editor extension providing Noir language support, focused on Aztec network development. It wires `nargo` LSP into Zed and references an external tree-sitter grammar.
+Aztec Noir (codename "Zoir") is a Zed editor extension providing Noir language support, focused on Aztec network development. It wires `nargo` LSP into Zed and references an external tree-sitter grammar. Published in the Zed registry as `aztec-noir`; the repository, Rust crate, and internal types keep the `zoir` name.
 
 ## Repository Boundaries
 
@@ -32,11 +32,14 @@ cargo check --target wasm32-wasip1
 
 ### LSP Integration (src/lib.rs)
 
-Three-tier nargo binary discovery:
+Four-tier nargo binary discovery (in `language_server_command` / `language_server_binary_path`):
 
-1. PATH lookup via `worktree.which("nargo")` - respects noirup installations
-2. Cached binary path from previous download
-3. GitHub release download from `noir-lang/noir`
+1. `lsp.nargo.binary.path` from Zed settings (explicit override; errors if the file is missing)
+2. PATH lookup via `worktree.which("nargo")` -- respects noirup installations
+3. Cached binary path from previous download
+4. GitHub release download from `noir-lang/noir`
+
+The extension also honors `lsp.nargo.binary.arguments` (appended after the built-in `lsp` subcommand) and `lsp.nargo.binary.env` (passed through to the spawned process). These are the structured `CommandSettings` fields from `zed_extension_api`; do NOT reintroduce ad-hoc `settings.get("args")` JSON reads -- the reviewer of PR zed-industries/extensions#4787 explicitly asked for the structured form.
 
 Platform asset mapping:
 
@@ -79,8 +82,9 @@ Reference notes about the upstream grammar (current as of last sync; verify in t
 ## Known Limitations
 
 - No checksum/signature verification on the downloaded `nargo` binary. Zed's `download_file` API does not currently surface a hash parameter; track upstream API additions and add verification once available. Tracked in [#2](https://github.com/DROOdotFOO/zoir/issues/2).
-- No nargo version pinning via Zed settings -- always pulls latest GitHub release. If Aztec compatibility regresses on a new nargo, users have no escape hatch short of falling back to a PATH-installed binary.
+- No nargo version pinning via Zed settings -- always pulls latest GitHub release when downloading. Users who need a specific version should install it themselves and point at it via `lsp.nargo.binary.path`.
 - Cleanup pass uses `fs::read_dir(".")` with a `nargo-` prefix match. Relies on Zed handing the extension a dedicated working directory.
+- No `aztec-nargo` detection yet. The Aztec ecosystem ships its own forked nargo with Aztec-specific macro support; we currently only discover plain `nargo`. Planned follow-up: prefer `aztec-nargo` on PATH when present, with `binary.path` as the user-facing escape hatch.
 
 ## Future: Code Folding
 
