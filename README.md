@@ -80,13 +80,17 @@ Configure the language server in your Zed settings (`~/.config/zed/settings.json
 {
   "lsp": {
     "nargo": {
-      "settings": {
-        "args": []
+      "binary": {
+        "path": "/opt/noir/bin/nargo",
+        "arguments": ["--show-output"],
+        "env": { "NARGO_LOG": "debug" }
       }
     }
   }
 }
 ```
+
+All `binary.*` fields are optional. When `binary.path` is set, the extension uses it directly and skips PATH lookup and automatic download.
 
 ### Running Tests
 

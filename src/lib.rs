@@ -123,30 +123,34 @@ impl zed::Extension for ZoirExtension {
         language_server_id: &LanguageServerId,
         worktree: &Worktree,
     ) -> Result<Command> {
-        let binary_path = self.language_server_binary_path(language_server_id, worktree)?;
+        let settings = LspSettings::for_worktree("nargo", worktree).ok();
+        let binary = settings.as_ref().and_then(|s| s.binary.as_ref());
 
-        let settings = LspSettings::for_worktree("nargo", worktree)
-            .ok()
-            .and_then(|s| s.settings);
+        let binary_path = if let Some(path) = binary.and_then(|b| b.path.as_ref()) {
+            if fs::metadata(path).is_err() {
+                return Err(format!(
+                    "nargo binary not found at {path} (configured via lsp.nargo.binary.path)"
+                ));
+            }
+            path.clone()
+        } else {
+            self.language_server_binary_path(language_server_id, worktree)?
+        };
 
         let mut args = vec!["lsp".to_string()];
+        if let Some(extra_args) = binary.and_then(|b| b.arguments.as_ref()) {
+            args.extend(extra_args.iter().cloned());
+        }
 
-        // Add any custom arguments from settings
-        let extra_args = settings
-            .as_ref()
-            .and_then(|s| s.get("args"))
-            .and_then(|v| v.as_array())
-            .into_iter()
-            .flatten()
-            .filter_map(|v| v.as_str())
-            .map(String::from);
-
-        args.extend(extra_args);
+        let env = binary
+            .and_then(|b| b.env.as_ref())
+            .map(|h| h.iter().map(|(k, v)| (k.clone(), v.clone())).collect())
+            .unwrap_or_default();
 
         Ok(Command {
             command: binary_path,
             args,
-            env: Default::default(),
+            env,
         })
     }
 
