@@ -81,7 +81,7 @@ Reference notes about the upstream grammar (current as of last sync; verify in t
 
 ## Known Limitations
 
-- No checksum/signature verification on the downloaded `nargo` binary. Zed's `download_file` API does not currently surface a hash parameter; track upstream API additions and add verification once available. Tracked in [#2](https://github.com/DROOdotFOO/zoir/issues/2).
+- No checksum/signature verification on the downloaded `nargo` binary. Zed's `download_file` API does not currently surface a hash parameter; track upstream API additions and add verification once available. Tracked in [#2](https://github.com/DROOdotFOO/aztec-noir/issues/2).
 - No nargo version pinning via Zed settings -- always pulls latest GitHub release when downloading. Users who need a specific version should install it themselves and point at it via `lsp.nargo.binary.path`.
 - Cleanup pass uses `fs::read_dir(".")` with a `nargo-` prefix match. Relies on Zed handing the extension a dedicated working directory.
 - No `aztec-nargo` detection yet. The Aztec ecosystem ships its own forked nargo with Aztec-specific macro support; we currently only discover plain `nargo`. Planned follow-up: prefer `aztec-nargo` on PATH when present, with `binary.path` as the user-facing escape hatch.

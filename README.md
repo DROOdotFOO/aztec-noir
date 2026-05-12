@@ -38,7 +38,7 @@ If you only need generic Noir editing without the Aztec slant, the [existing Noi
 Clone this repository into your Zed extensions directory:
 
 ```bash
-git clone https://github.com/DROOdotFOO/zoir ~/.config/zed/extensions/aztec-noir
+git clone https://github.com/DROOdotFOO/aztec-noir ~/.config/zed/extensions/aztec-noir
 ```
 
 ## Requirements

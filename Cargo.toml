@@ -4,7 +4,7 @@ version = "0.3.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 description = "Noir language support for Zed, focused on Aztec network development"
-repository = "https://github.com/DROOdotFOO/zoir"
+repository = "https://github.com/DROOdotFOO/aztec-noir"
 
 [lib]
 crate-type = ["cdylib"]

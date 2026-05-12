@@ -4,7 +4,7 @@ description = "Noir language support for Zed, focused on Aztec network developme
 version = "0.3.0"
 schema_version = 1
 authors = ["DROO <drew@axol.io>"]
-repository = "https://github.com/DROOdotFOO/zoir"
+repository = "https://github.com/DROOdotFOO/aztec-noir"
 license = "MIT OR Apache-2.0"
 
 [grammars.noir]
