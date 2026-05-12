@@ -13,7 +13,7 @@ This repository contains only the Zed extension. Two related concerns live elsew
 - **Tree-sitter grammar** -- `DROOdotFOO/tree-sitter-noir` (referenced by SHA in `extension.toml`). The `grammars/` directory is `.gitignore`d locally.
 - **`nargo` language server** -- `noir-lang/noir` (downloaded at runtime when not on PATH).
 
-If you need to edit the grammar (test corpus, conflicts, node names), do that work in `DROOdotFOO/tree-sitter-noir` and bump the `rev` in `extension.toml`. See [Working on the Grammar](#working-on-the-grammar) below.
+If you need to edit the grammar (test corpus, conflicts, node names), do that work in `DROOdotFOO/tree-sitter-noir` and bump the grammar `commit` SHA in `extension.toml`. See [Working on the Grammar](#working-on-the-grammar) below.
 
 ## Key Commands (this repo)
 
@@ -53,7 +53,7 @@ Platform asset mapping:
 
 Zoir's editor queries live in `languages/noir/` (config, brackets, outline, indents, textobjects, runnables). These are read by Zed.
 
-Highlights/locals/injections queries live in the upstream grammar repo under `queries/` and travel with the grammar `rev`.
+Highlights/locals/injections queries live in the upstream grammar repo under `queries/` and travel with the pinned grammar `commit`.
 
 ### Versioning
 
@@ -66,7 +66,7 @@ The grammar is a separate project. To change it:
 1. Clone `DROOdotFOO/tree-sitter-noir` outside this repo
 2. Edit `grammar.js`, regenerate (`npx tree-sitter generate`), test (`npm test`)
 3. Tag a release in that repo
-4. Update the `rev` in this repo's `extension.toml`
+4. Update the grammar `commit` SHA in this repo's `extension.toml` (must be a SHA, not a tag -- the Zed registry's extension builder does a shallow fetch that omits tags, so `rev = "v0.1.1"` will fail in CI even if the tag exists upstream)
 5. Bump zoir's version (both `extension.toml` and `Cargo.toml`)
 
 Reference notes about the upstream grammar (current as of last sync; verify in the upstream repo before relying on them):

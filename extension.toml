@@ -9,7 +9,7 @@ license = "MIT OR Apache-2.0"
 
 [grammars.noir]
 repository = "https://github.com/DROOdotFOO/tree-sitter-noir"
-rev = "v0.1.1"
+commit = "1a6db6770c1307a3c8d318c6b8eea082602e4599"
 
 [language_servers.nargo]
 name = "nargo"
